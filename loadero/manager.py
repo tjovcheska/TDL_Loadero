@@ -333,6 +333,3 @@ def filter_tests_by_name(name_for_search):
                 print(test)
                 return test
         print("There is no test with that name!")
-
-
-              

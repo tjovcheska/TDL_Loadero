@@ -21,8 +21,8 @@ def get_test(args):
             print("Error: {}".format(e))
             sys.exit(1)
 
-def start_test(args):
-    url="https://api.loadero.com/v2/projects/{0}/tests/{1}/runs/".format(args.project_id, args.test_id)
+def start_test(args, test_id):
+    url="https://api.loadero.com/v2/projects/{0}/tests/{1}/runs/".format(args.project_id, test_id)
     payload={}
     headers={}
     headers["Authorization"]=args.auth_token
@@ -41,8 +41,8 @@ def start_test(args):
         print("Error: {}".format(e))
         sys.exit(1)
 
-def get_test_run_id_status(args, test_run_id):
-    url="https://api.loadero.com/v2/projects/{0}/tests/{1}/runs/{2}/".format(args.project_id, args.test_id, test_run_id)
+def get_test_run_id_status(args, test_id, test_run_id):
+    url="https://api.loadero.com/v2/projects/{0}/tests/{1}/runs/{2}/".format(args.project_id, test_id, test_run_id)
     payload={}
     headers={}
     headers["Authorization"]=args.auth_token
@@ -61,10 +61,10 @@ def get_test_run_id_status(args, test_run_id):
         print("Error: {}".format(e))
         sys.exit(1)
 
-def wait_for_test_completion(args, test_run_id, status):
+def wait_for_test_completion(args, test_id, test_run_id, status):
     while status in [None, 'pending', 'initializing', 'running', 'waiting-results']:
         time.sleep(10)
-        url="https://api.loadero.com/v2/projects/{0}/tests/{1}/runs/{2}/".format(args.project_id, args.test_id, test_run_id)
+        url="https://api.loadero.com/v2/projects/{0}/tests/{1}/runs/{2}/".format(args.project_id, test_id, test_run_id)
         payload={}
         headers={}
         headers["Authorization"]=args.auth_token
@@ -82,8 +82,8 @@ def wait_for_test_completion(args, test_run_id, status):
                 sys.exit('Test Result: Test failed with status: {0}.'.format(new_status))
 
 
-def check_status(args, test_run_id):
-    url="https://api.loadero.com/v2/projects/{0}/tests/{1}/runs/{2}/".format(args.project_id, args.test_id, test_run_id)
+def check_status(args, test_id, test_run_id):
+    url="https://api.loadero.com/v2/projects/{0}/tests/{1}/runs/{2}/".format(args.project_id, test_id, test_run_id)
     payload={}
     headers={}
     headers["Authorization"]=args.auth_token
@@ -104,3 +104,4 @@ def check_status(args, test_run_id):
     except requests.exceptions.RequestException as e:
         print("Error: {}".format(e))
         sys.exit(1)
+        

@@ -47,8 +47,8 @@ def parse_arguments():
 def main():
     args=parse_arguments()
 
-    # Get all tests
-    # Manager.get_all_tests(args)
+    #Get all tests
+    Manager.get_all_tests(args)
 
     # Get test_id
     test_id=Manager.read_test_id()
@@ -58,40 +58,39 @@ def main():
     test_name=Manager.read_test_name()
     print(test_name)
 
-    script_template=Manager.get_script_template(test_id, test_name)
-    print(type(script_template))
+    # script_template=Manager.get_script_template(test_id, test_name)
 
-    Manager.create_test(args, script_template)
+    # Manager.create_test(args, script_template)
 
-    # # Create subdirectory for test with test_id
-    # Manager.create_test_case_subdirectory(test_id, test_name)
+    # Create subdirectory for test with test_id
+    Manager.create_test_case_subdirectory(test_id, test_name)
 
-    # # Get all groups for test with test_id
-    # Manager.get_all_groups(args, test_id, test_name)
+    # Get all groups for test with test_id
+    Manager.get_all_groups(args, test_id, test_name)
 
-    # # Get all participants for test with test_id
-    # Manager.get_all_participants(args, test_id, test_name)
+    # Get all participants for test with test_id
+    Manager.get_all_participants(args, test_id, test_name)
 
-    # # Get script_file_id
-    # script_file_id=Manager.get_script_file_id(args)
-    # # print(script_file_id)
+    # Get script_file_id
+    script_file_id=Manager.get_script_file_id(args)
+    # print(script_file_id)
 
-    # # Get script content
-    # Manager.get_script_content(args, script_file_id, test_id, test_name)
+    # Get script content
+    Manager.get_script_content(args, script_file_id, test_id, test_name)
 
-    # # Get group_id
-    # group_id = Manager.read_group_id(test_id, test_name)
-    # # print(group_id)
+    # Get group_id
+    group_id = Manager.read_group_id(test_id, test_name)
+    # print(group_id)
 
-    # # Get participant_id
-    # participant_id = Manager.read_participant_id(test_id, test_name)
-    # # print(participant_id)
+    # Get participant_id
+    participant_id = Manager.read_participant_id(test_id, test_name)
+    # print(participant_id)
 
     # Running test 
-    # test_run_id = Runner.start_test(args)
-    # status = Runner.get_test_run_id_status(args, test_run_id)
-    # Runner.wait_for_test_completion(args, test_run_id, status)
-    # Runner.check_status(args, test_run_id)
+    test_run_id = Runner.start_test(args, test_id)
+    status = Runner.get_test_run_id_status(args, test_id, test_run_id)
+    Runner.wait_for_test_completion(args, test_id, test_run_id, status)
+    Runner.check_status(args, test_id, test_run_id)
 
 
 
