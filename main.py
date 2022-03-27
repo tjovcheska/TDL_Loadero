@@ -1,4 +1,5 @@
 import json
+from multiprocessing import managers
 from re import template
 import loadero.runner as Runner
 import loadero.manager as Manager
@@ -47,51 +48,61 @@ def parse_arguments():
 def main():
     args=parse_arguments()
 
-    #Get all tests
-    Manager.get_all_tests(args)
+    # # Get all tests
+    # Manager.get_all_tests(args)
 
-    # Get test_id
-    test_id=Manager.read_test_id()
-    print(test_id)
+    # Read from all_tests.json, old test
+    test = Manager.read_test_from_responses() 
+    test_name=test["name"]
+    test_id=test["id"]
+    start_interval=test["start_interval"]
+    participant_timeout=test["participant_timeout"]
+    mode=test["mode"]
+    increment_strategy=test["increment_strategy"]
+    script_template=Manager.get_script_template(test_id, test_name)
 
-    # Get test_name
-    test_name=Manager.read_test_name()
-    print(test_name)
-
-    # script_template=Manager.get_script_template(test_id, test_name)
-
-    # Manager.create_test(args, script_template)
+    # Create new test with name TestX
+    testX=Manager.create_test(args, start_interval, participant_timeout, mode, increment_strategy, script_template)
+    testX_id=testX["id"]
+    testX_name=testX["name"]
 
     # Create subdirectory for test with test_id
-    Manager.create_test_case_subdirectory(test_id, test_name)
+    Manager.create_test_case_subdirectory(testX_id, testX_name)
+
+    # Read from groups.json, old test
+    groups=Manager.read_groups_from_groups(test_id, test_name)
+
+    # Read from participants.json, old test
+    participants=Manager.read_participants_from_participants(test_id, test_name)
+
+    for group in groups:
+        group_name=group["name"]
+        group_count=group["count"]
+        new_group=Manager.create_new_group(args, testX_id, group_count, group_name)
+        new_group_id=new_group["id"]
+        for participant in participants:
+            participant_browser=participant["browser"]
+            participant_name=participant["name"]
+            participant_count=participant["count"]
+            Manager.create_new_participant(args, testX_id, new_group_id, participant_browser, participant_count, participant_name)
 
     # Get all groups for test with test_id
-    Manager.get_all_groups(args, test_id, test_name)
+    Manager.get_all_groups(args, testX_id, testX_name)
 
     # Get all participants for test with test_id
-    Manager.get_all_participants(args, test_id, test_name)
+    Manager.get_all_participants(args, testX_id, testX_name)
 
     # Get script_file_id
     script_file_id=Manager.get_script_file_id(args)
-    # print(script_file_id)
+    print(script_file_id)
 
     # Get script content
-    Manager.get_script_content(args, script_file_id, test_id, test_name)
-
-    # Get group_id
-    group_id = Manager.read_group_id(test_id, test_name)
-    # print(group_id)
-
-    # Get participant_id
-    participant_id = Manager.read_participant_id(test_id, test_name)
-    # print(participant_id)
+    Manager.get_script_content(args, script_file_id, testX_id, testX_name)
 
     # Running test 
-    test_run_id = Runner.start_test(args, test_id)
-    status = Runner.get_test_run_id_status(args, test_id, test_run_id)
-    Runner.wait_for_test_completion(args, test_id, test_run_id, status)
-    Runner.check_status(args, test_id, test_run_id)
-
-
+    test_run_id = Runner.start_test(args, testX_id)
+    status = Runner.get_test_run_id_status(args, testX_id, test_run_id)
+    Runner.wait_for_test_completion(args, testX_id, test_run_id, status)
+    Runner.check_status(args, testX_id, test_run_id)
 
 main()

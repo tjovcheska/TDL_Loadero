@@ -104,4 +104,3 @@ def check_status(args, test_id, test_run_id):
     except requests.exceptions.RequestException as e:
         print("Error: {}".format(e))
         sys.exit(1)
-        

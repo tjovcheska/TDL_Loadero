@@ -9,15 +9,15 @@ def get_script_template(test_id, test_name):
         template=script.read()
     return template
 
-def create_test(args, template):
-    url="https://api.loadero.com/v2/projects{0}/tests/".format(args.project_id)
+def create_test(args, start_interval, participant_timeout, mode, increment_strategy, script_template):
+    url="https://api.loadero.com/v2/projects/{0}/tests/".format(args.project_id)
     payload=json.dumps({
         "name": "TestX",
-        "start_interval": 1,
-        "participant_timeout": 1200,
-        "mode": "performance",
-        "increment_strategy": "linear",
-        "script": template
+        "start_interval": start_interval,
+        "participant_timeout": participant_timeout,
+        "mode": mode,
+        "increment_strategy": increment_strategy,
+        "script": script_template
     })
     headers={}
     headers["Authorization"]=args.auth_token
@@ -26,12 +26,37 @@ def create_test(args, template):
     try:
         response=requests.post(url, headers=headers, data=payload)
         response.raise_for_status()
-        if(response.status_code==200):
+        if(response.status_code==201):
             print("Test created successfully!")
+            response_json=response.json()
+            return response_json
 
     except requests.exceptions.RequestException as e:
             print("Error: {}".format(e))
             sys.exit(1)
+
+def read_test_from_responses():
+    absolute_path=os.path.abspath('responses/all_tests.json')
+    with open(absolute_path, "r") as f:
+        response=f.read()
+        response_json=json.loads(response)
+        for result in response_json:
+            print(result)
+            return result
+
+def read_groups_from_groups(test_id, test_name):
+    absolute_path=os.path.abspath('test_cases/' + str(test_id) + '_' +test_name +'/groups.json')
+    with open(absolute_path, "r") as f:
+        response=f.read()
+        response_json=json.loads(response)
+        return response_json
+
+def read_participants_from_participants(test_id, test_name):
+    absolute_path=os.path.abspath('test_cases/' + str(test_id) + '_' +test_name +'/participants.json')
+    with open(absolute_path, "r") as f:
+        response=f.read()
+        response_json=json.loads(response)
+        return response_json
 
 def delete_test(args):
         url="https://api.loadero.com/v2/projects/{0}/tests/{1}/".format(args.project_id, args.test_id)
@@ -42,7 +67,6 @@ def delete_test(args):
         try:
             response=requests.delete(url, headers=headers, data=payload)
             response.raise_for_status()
-            print(response.status_code)
             if(response.status_code==200):
                 print("Test deleted successfully !")
 
@@ -59,10 +83,8 @@ def read_test(args, test_id):
         try:
             response=requests.get(url, headers=headers, data=payload)
             response.raise_for_status()
-            print(response.status_code)
             if(response.status_code==200):
                 json_response=response.json()
-                print(json_response)  
                 return json_response
 
         except requests.exceptions.RequestException as e:
@@ -147,9 +169,7 @@ def get_all_tests(args):
         if(response.status_code==200):
             json_response=response.json()
             all_tests=json_response['results']
-            # print(all_tests)
             all_tests_json=json.dumps(all_tests)
-            # print(all_tests_json)
             absolute_path=os.path.abspath('responses/all_tests.json')
             with open(absolute_path, "w") as f:
                 f.write(all_tests_json)
@@ -266,7 +286,6 @@ def read_test_id():
     with open(absolute_path, "r") as f:
         response=f.read()
         response_json=json.loads(response)
-        # print(response_json)
         for result in response_json:
             test_id=result["id"]
             return test_id
@@ -276,7 +295,6 @@ def read_test_name():
     with open(absolute_path, "r") as f:
         response=f.read()
         response_json=json.loads(response)
-        # print(response_json)
         for result in response_json:
             test_name=result["name"]
             return test_name
@@ -330,6 +348,49 @@ def filter_tests_by_name(name_for_search):
         tests=json.loads(response)
         for test in tests:
             if(test["name"] == name_for_search):
-                print(test)
                 return test
         print("There is no test with that name!")
+
+def create_new_group(args, test_id, group_count, group_name): #for new test 13994
+    url="https://api.loadero.com/v2/projects/{0}/tests/{1}/groups/".format(args.project_id, test_id)
+    payload=json.dumps({
+        "count": group_count,
+        "name": group_name
+    })
+    headers={}
+    headers['Authorization']=args.auth_token
+    headers['Content-Type']='application.json'
+
+    try:
+        response = requests.post(url, headers=headers, data=payload)
+        response.raise_for_status()
+        if(response.status_code==201):
+            print("Successfully created new group!")
+            response_json=response.json()
+            return response_json
+
+    except requests.exceptions.RequestException as e:
+        print("Error: {}".format(e))
+        sys.exit(1)   
+
+def create_new_participant(args, test_id, group_id, participant_browser, participant_count, participant_name):
+    url = "https://api.loadero.com/v2/projects/{0}/tests/{1}/groups/{2}/participants".format(args.project_id, test_id, group_id)
+    payload=json.dumps({
+        "browser": participant_browser,
+        "count": participant_count,
+        "name": participant_name
+    })
+    headers={}
+    headers['Authorization']=args.auth_token
+    headers['Content-Type']='application.json'
+    
+    try:
+        response = requests.post(url, headers=headers, data=payload)
+        response.raise_for_status()
+        if(response.status_code==201):
+            print("Successfully created new participant!")
+
+    except requests.exceptions.RequestException as e:
+        print("Error: {}".format(e))
+        sys.exit(1)
+        
