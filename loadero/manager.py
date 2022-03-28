@@ -393,4 +393,24 @@ def create_new_participant(args, test_id, group_id, participant_browser, partici
     except requests.exceptions.RequestException as e:
         print("Error: {}".format(e))
         sys.exit(1)
+
+def get_test_with_id(args, test_id, test_name):
+    url = "https://api.loadero.com/v2/projects/{0}/tests/{1}/".format(args.project_id, test_id)
+    payload={}
+    headers = {}
+    headers['Authorization']=args.auth_token
+
+    try:
+        response=requests.get(url, headers=headers, data=payload)
+        response.raise_for_status()
+        if(response.status_code==200):
+            json_response=response.json()
+            test_info=json.dumps(json_response)
+            absolute_path=os.path.abspath('test_cases/' + str(test_id) + '_' + test_name + '/testinfo.json')
+            with open(absolute_path, "w") as f:
+                f.write(test_info)
+
+    except requests.exceptions.RequestException as e:
+        print("Error: {}".format(e))
+        sys.exit(1)
         
