@@ -9,10 +9,10 @@ def get_script_template(test_id, test_name):
         template=script.read()
     return template
 
-def create_test(args, start_interval, participant_timeout, mode, increment_strategy, script_template):
+def create_test(args, test_name, start_interval, participant_timeout, mode, increment_strategy, script_template):
     url="https://api.loadero.com/v2/projects/{0}/tests/".format(args.project_id)
     payload=json.dumps({
-        "name": "TestX",
+        "name": test_name,
         "start_interval": start_interval,
         "participant_timeout": participant_timeout,
         "mode": mode,

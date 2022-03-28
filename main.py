@@ -62,7 +62,7 @@ def main():
     script_template=Manager.get_script_template(test_id, test_name)
 
     # Create new test with name TestX
-    testX=Manager.create_test(args, start_interval, participant_timeout, mode, increment_strategy, script_template)
+    testX=Manager.create_test(args, args.test_name, start_interval, participant_timeout, mode, increment_strategy, script_template)
     testX_id=testX["id"]
     testX_name=testX["name"]
 
