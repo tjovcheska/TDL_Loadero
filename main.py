@@ -102,10 +102,10 @@ def main():
     # Get test info and write it to a folder
     Manager.get_test_with_id(args, testX_id, testX_name)
 
-    # # Running test 
-    # test_run_id = Runner.start_test(args, testX_id)
-    # status = Runner.get_test_run_id_status(args, testX_id, test_run_id)
-    # Runner.wait_for_test_completion(args, testX_id, test_run_id, status)
-    # Runner.check_status(args, testX_id, test_run_id)
+    # Running test 
+    test_run_id = Runner.start_test(args, testX_id)
+    status = Runner.get_test_run_id_status(args, testX_id, test_run_id)
+    Runner.wait_for_test_completion(args, testX_id, test_run_id, status)
+    Runner.check_status(args, testX_id, test_run_id)
 
 main()
