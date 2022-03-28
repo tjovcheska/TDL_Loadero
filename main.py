@@ -26,7 +26,7 @@ def parse_arguments():
 
     parser.add_argument('--auth_token', help='Authentication Token', default=auth_token, required=False)
     parser.add_argument('--project_id', help='Project Id', default=project_id, required=False)
-    #parser.add_argument('--test_id', help='Test Id', default=test_id, required=False)
+    # parser.add_argument('--test_id', help='Test Id', default=test_id, required=False)
     # parser.add_argument('--group_id', help='Group Id', default=group_id, required=False)
     # parser.add_argument('--participant_id', help='Participant Id', default=participant_id, required=False)
 
