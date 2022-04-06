@@ -93,7 +93,7 @@ def check_status(args, test_id, test_run_id):
         response.raise_for_status()
         print(response.status_code)
         if(response.status_code==200):
-            json_response=response.json ()
+            json_response=response.json()
             success_rate=json_response['success_rate']
             print(success_rate)
             if(success_rate==1):
