@@ -10,4 +10,4 @@ RUN pip install -r requirements.txt
 
 COPY ./loadero ./loadero
 
-CMD [ "python", "./main.py" ]
+ENTRYPOINT [ "python", "./main.py" ]

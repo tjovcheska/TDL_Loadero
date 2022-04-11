@@ -3,9 +3,11 @@ import loadero.runner as Runner
 import loadero.manager as Manager
 import sys
 import argparse
+import os
 
 auth_token="LoaderoAuth 57e4fed9ea8a52a26872cad37129231c52e34b06bcbfcca5"
 project_id=10571
+test_id = 14089
 
 test_name="WebRTC"
 start_interval=1
@@ -28,26 +30,23 @@ def parse_arguments():
     parser.add_argument('--auth_token', help='Authentication Token', default=auth_token, required=False)
     parser.add_argument('--project_id', help='Project Id', default=project_id, required=False)
 
+    parser.add_argument('--test_id', help='Test id', default=test_id, required=False)
     parser.add_argument('--test_name', help='Test name', default=test_name, required=False)
-    parser.add_argument('--start_interval', help='Start interval', default=start_interval, required=False)
-    parser.add_argument('--participant_timeout', help='Participant timeout', default=participant_timeout, required=False)
-    parser.add_argument('--mode', help='Mode', default=mode, required=False)
-    parser.add_argument('--increment_strategy', help='Increment strategy', default=increment_strategy, required=False)
-    parser.add_argument('--group_count', help='Group count', default=group_count, required=False)
-    parser.add_argument('--group_name', help='Group name', default=group_name, required=False)
-    parser.add_argument('--participant_browser', help='Participant brpwser', default=participant_browser, required=False)
-    parser.add_argument('--participant_count', help='Participant count', default=participant_count, required=False)
-    parser.add_argument('--participant_name', help='Participant name', default=participant_name, required=False)
+    # parser.add_argument('--start_interval', help='Start interval', default=start_interval, required=False)
+    # parser.add_argument('--participant_timeout', help='Participant timeout', default=participant_timeout, required=False)
+    # parser.add_argument('--mode', help='Mode', default=mode, required=False)
+    # parser.add_argument('--increment_strategy', help='Increment strategy', default=increment_strategy, required=False)
+    # parser.add_argument('--group_count', help='Group count', default=group_count, required=False)
+    # parser.add_argument('--group_name', help='Group name', default=group_name, required=False)
+    # parser.add_argument('--participant_browser', help='Participant brpwser', default=participant_browser, required=False)
+    # parser.add_argument('--participant_count', help='Participant count', default=participant_count, required=False)
+    # parser.add_argument('--participant_name', help='Participant name', default=participant_name, required=False)
 
     args = parser.parse_args()
     return args
 
 def main():
     args=parse_arguments()
-
-    # # Initial test
-    test_id = 14089
-    test_name = "WebRTC"
 
     # Create subdirectory for initial test
     Manager.create_test_case_subdirectory(test_id, test_name)
@@ -116,13 +115,13 @@ def main():
     
     for a in asserts:
                 assert_expected=a["expected"]
-                print(assert_expected)
+                # print(assert_expected)
                 assert_operator=a["operator"]
-                print(assert_operator)
+                # print(assert_operator)
                 assert_path=a["path"]
-                print(assert_path)
+                # print(assert_path)
                 new_assert=Manager.create_new_assert(args, WebRTC_test_id, assert_expected, assert_operator, assert_path)
-                print(new_assert)
+                # print(new_assert)
 
     # Get test info
     Manager.get_test_with_id(args, WebRTC_test_id, WebRTC_test_name)
