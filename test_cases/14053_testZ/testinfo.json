@@ -1,0 +1,1 @@
+{"id": 14053, "created": "2022-03-28T09:18:24Z", "updated": "2022-03-28T09:18:24Z", "project_id": 10571, "name": "testZ", "script_file_id": 121402, "start_interval": 1, "participant_timeout": 1500, "mode": "performance", "increment_strategy": "linear", "group_count": 2, "participant_count": 4}
