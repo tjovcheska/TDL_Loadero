@@ -1,5 +1,5 @@
-import loadero.runner as Runner
 import argparse
+import loadero.runner as Runner
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
@@ -12,6 +12,7 @@ def parse_arguments():
     return args
 
 def main():
+    """Main function for runnung Loadero tests."""
     args=parse_arguments()
 
     if args.project_id!= 0 and len(args.auth_token) != 0 and args.test_id != 0:
